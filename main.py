@@ -1,4 +1,11 @@
 from fastapi import FastAPI
+import sqlalchemy as sa
+
+
+engine = sa.create_engine("sqlite:///:memory:")
+connection = engine.connect()
+metadata = sa.MetaData()
+
 
 api = FastAPI()
 
