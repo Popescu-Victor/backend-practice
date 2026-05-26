@@ -1,10 +1,16 @@
 import worldnewsapi
 import dotenv
+from wnapi_to_telegram import send_news
 
-token = dotenv.get_key(".env", "WNAPI")
+
+
+wn_token = dotenv.get_key(".env", "WNAPI")
+search_topic = input("What topic are you interested in? ")
+
+
 
 # Initial SDK configuration
-newsapi_configuration = worldnewsapi.Configuration(api_key={'apiKey': token})
+newsapi_configuration = worldnewsapi.Configuration(api_key={'apiKey': wn_token})
 
 try:
 	newsapi_instance = worldnewsapi.NewsApi(worldnewsapi.ApiClient(newsapi_configuration))
@@ -13,12 +19,12 @@ try:
 	offset = 0
 	all_results = []
 
-	while len(all_results) < max_results:
+	while len(all_results) < 3:
 
 		request_count = min(100, max_results - len(all_results)) # request 100 or the remaining number of articles
 
 		response = newsapi_instance.search_news(
-			text='mma',
+			text=search_topic,
 			language='en',
 			sort="publish-time",
 			sort_direction="desc",
@@ -36,13 +42,15 @@ try:
 		all_results.extend(response.news)
 		offset += 100
 
+
+
 except worldnewsapi.ApiException as e:
 	print("Exception when calling NewsApi->search_news: %s\n" % e)
 
+async def main():
+	for article in all_results:
+		await send_news(article.title)
 
-for article in all_results:
-    print("\nTitle: " + str(article.title))
-    print("Authors: " + str(article.authors))
-    print("URL: " + str(article.url))
-    print("Sentiment: " + str(article.sentiment))
-    print("Text: " + str(article.text[:80]) + "...") # print first 80 characters of the text
+if __name__ == "__main__":
+	import asyncio
+	asyncio.run(main())
