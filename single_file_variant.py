@@ -3,6 +3,8 @@ import dotenv
 from typing import Final
 from telegram.ext import ApplicationBuilder, MessageHandler, filters
 
+# Testing link between firestore db and telegram bot through api.
+
 
 api_key = dotenv.get_key(dotenv.find_dotenv(), "GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
