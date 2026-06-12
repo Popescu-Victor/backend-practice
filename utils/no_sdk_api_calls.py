@@ -3,6 +3,9 @@ import dotenv
 import asyncio
 from wnapi_to_telegram import send_news
 
+# API call without official SDK
+
+
 wn_token = dotenv.get_key(".env", "WNAPI")
 search_topic = input("What topic are you interested in? ")
 
